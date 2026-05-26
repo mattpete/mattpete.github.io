@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Phoebe & Wyatt — Care Schedule</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,800;1,9..144,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #f5efe4;
+    --cream-deep: #ebe2d1;
+    --ink: #2a2419;
+    --ink-soft: #5c5443;
+    --rust: #b85c38;
+    --rust-deep: #8f3f22;
+    --sage: #6b7f5a;
+    --sage-deep: #4a5a3c;
+    --gold: #c89b3a;
+    --done: #9ca58e;
+    --shadow: rgba(42, 36, 25, 0.08);
+    --shadow-deep: rgba(42, 36, 25, 0.16);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  html, body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: radial-gradient(circle at 20% 10%, rgba(184, 92, 56, 0.06), transparent 40%),
+                      radial-gradient(circle at 80% 90%, rgba(107, 127, 90, 0.06), transparent 40%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 520px;
+    margin: 0 auto;
+    padding: 24px 20px 80px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* HEADER */
+  .header {
+    text-align: center;
+    padding: 16px 0 28px;
+    border-bottom: 1px solid var(--cream-deep);
+    margin-bottom: 28px;
+  }
+
+  .header .eyebrow {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--rust);
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .header h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 800;
+    font-size: 34px;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    color: var(--ink);
+  }
+
+  .header h1 .amp {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--rust);
+  }
+
+  .header .subtitle {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: var(--ink-soft);
+    margin-top: 6px;
+  }
+
+  /* INFO CARD */
+  .info-card {
+    background: var(--ink);
+    color: var(--cream);
+    border-radius: 14px;
+    padding: 18px 20px;
+    margin-bottom: 24px;
+    box-shadow: 0 8px 24px var(--shadow-deep);
+  }
+
+  .info-card h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    margin-bottom: 12px;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    font-size: 11px;
+  }
+
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(245, 239, 228, 0.08);
+    font-size: 14px;
+  }
+
+  .info-row:last-child { border-bottom: none; }
+
+  .info-row .label {
+    color: rgba(245, 239, 228, 0.6);
+    font-size: 12px;
+    letter-spacing: 0.05em;
+  }
+
+  .info-row .value {
+    font-weight: 500;
+    text-align: right;
+  }
+
+  .info-row .value a {
+    color: var(--gold);
+    text-decoration: none;
+    border-bottom: 1px dotted var(--gold);
+  }
+
+  /* DAY NAVIGATOR */
+  .day-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: white;
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 12px var(--shadow);
+  }
+
+  .day-nav button {
+    background: var(--cream-deep);
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    font-size: 18px;
+    color: var(--ink);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-family: 'Fraunces', serif;
+  }
+
+  .day-nav button:active { transform: scale(0.92); background: var(--rust); color: white; }
+  .day-nav button:disabled { opacity: 0.3; }
+
+  .day-display {
+    text-align: center;
+    flex: 1;
+  }
+
+  .day-display .day-label {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 18px;
+    letter-spacing: -0.01em;
+  }
+
+  .day-display .day-date {
+    font-size: 11px;
+    color: var(--ink-soft);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+
+  .progress-pill {
+    display: inline-block;
+    background: var(--sage);
+    color: white;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-top: 6px;
+    letter-spacing: 0.05em;
+  }
+
+  .progress-pill.partial { background: var(--gold); }
+  .progress-pill.none { background: var(--cream-deep); color: var(--ink-soft); }
+
+  /* TIME BLOCK */
+  .time-block {
+    margin-bottom: 28px;
+  }
+
+  .time-block-header {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 14px;
+    padding: 0 4px;
+  }
+
+  .time-block-header .icon {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 28px;
+    color: var(--rust);
+    line-height: 1;
+  }
+
+  .time-block-header h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 22px;
+    letter-spacing: -0.01em;
+    flex: 1;
+  }
+
+  .time-block-header .time-hint {
+    font-size: 11px;
+    color: var(--ink-soft);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .task-list {
+    background: white;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px var(--shadow);
+  }
+
+  .task {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--cream);
+    cursor: pointer;
+    transition: background 0.15s ease;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .task:last-child { border-bottom: none; }
+  .task:active { background: var(--cream); }
+
+  .checkbox {
+    width: 22px;
+    height: 22px;
+    border: 2px solid var(--ink-soft);
+    border-radius: 6px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    background: white;
+  }
+
+  .task.done .checkbox {
+    background: var(--sage);
+    border-color: var(--sage);
+  }
+
+  .task.done .checkbox::after {
+    content: '✓';
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .task-content {
+    flex: 1;
+  }
+
+  .task-text {
+    font-size: 15px;
+    line-height: 1.4;
+    color: var(--ink);
+    transition: all 0.2s ease;
+  }
+
+  .task.done .task-text {
+    text-decoration: line-through;
+    color: var(--done);
+  }
+
+  .task-meta {
+    display: flex;
+    gap: 8px;
+    margin-top: 6px;
+    flex-wrap: wrap;
+  }
+
+  .tag {
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .tag.phoebe { background: rgba(184, 92, 56, 0.12); color: var(--rust-deep); }
+  .tag.wyatt { background: rgba(107, 127, 90, 0.15); color: var(--sage-deep); }
+  .tag.both { background: rgba(200, 155, 58, 0.18); color: #7a5e1f; }
+  .tag.med { background: var(--ink); color: var(--gold); }
+
+  /* NOTES SECTION */
+  .notes-section {
+    background: white;
+    border-radius: 14px;
+    padding: 16px;
+    margin-top: 20px;
+    box-shadow: 0 4px 12px var(--shadow);
+  }
+
+  .notes-section label {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: var(--ink-soft);
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  .notes-section textarea {
+    width: 100%;
+    border: none;
+    background: var(--cream);
+    border-radius: 8px;
+    padding: 12px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: var(--ink);
+    resize: vertical;
+    min-height: 80px;
+    outline: none;
+  }
+
+  .notes-section textarea:focus { background: var(--cream-deep); }
+
+  /* ACTION ROW */
+  .action-row {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 24px;
+    align-items: center;
+  }
+
+  .share-btn {
+    background: var(--sage);
+    color: white;
+    border: none;
+    padding: 14px 24px;
+    border-radius: 24px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    box-shadow: 0 4px 12px rgba(107, 127, 90, 0.3);
+    transition: transform 0.15s ease;
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .share-btn:active { transform: scale(0.97); background: var(--sage-deep); }
+
+  /* RESET BUTTON */
+  .reset-btn {
+    display: block;
+    margin: 24px auto 0;
+    background: none;
+    border: 1px dashed var(--ink-soft);
+    color: var(--ink-soft);
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .reset-btn:active { background: var(--cream-deep); }
+
+  /* FOOTER */
+  .footer {
+    text-align: center;
+    margin-top: 40px;
+    padding-top: 24px;
+    border-top: 1px solid var(--cream-deep);
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 13px;
+    color: var(--ink-soft);
+  }
+
+  .footer .paw {
+    font-style: normal;
+    color: var(--rust);
+    margin: 0 6px;
+  }
+
+  /* RABBIT WARNING BANNER */
+  .rabbit-banner {
+    background: linear-gradient(135deg, var(--rust) 0%, var(--rust-deep) 100%);
+    color: var(--cream);
+    padding: 14px 18px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.45;
+    box-shadow: 0 4px 12px rgba(184, 92, 56, 0.25);
+  }
+
+  .rabbit-banner strong {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 14px;
+    display: block;
+    margin-bottom: 3px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header class="header">
+    <div class="eyebrow">Daily Care Schedule</div>
+    <h1>Phoebe <span class="amp">&amp;</span> Wyatt</h1>
+    <div class="subtitle">May 27 – June 1 · Thank you for taking care of them</div>
+  </header>
+
+  <div class="rabbit-banner">
+    <strong>Important, every yard time</strong>
+    Sweep the whole yard for rabbits before letting Phoebe out. Wyatt always goes out on leash.
+  </div>
+
+  <div class="info-card">
+    <h3>Quick Reference</h3>
+    <div class="info-row">
+      <span class="label">Mia arrives</span>
+      <span class="value">Afternoon (kennel Wyatt first)</span>
+    </div>
+    <div class="info-row">
+      <span class="label">Phoebe meds</span>
+      <span class="value">Cyclosporine 2x, Ursodiol ½ pm, Denamarin pm</span>
+    </div>
+    <div class="info-row">
+      <span class="label">Wyatt meds</span>
+      <span class="value">Trazodone am, Denamarin pm</span>
+    </div>
+  </div>
+
+  <nav class="day-nav">
+    <button id="prevDay" aria-label="Previous day">‹</button>
+    <div class="day-display">
+      <div class="day-label" id="dayLabel">Day 1</div>
+      <div class="day-date" id="dayDate">—</div>
+      <div class="progress-pill none" id="progressPill">0 of 0</div>
+    </div>
+    <button id="nextDay" aria-label="Next day">›</button>
+  </nav>
+
+  <div id="scheduleContainer"></div>
+
+  <div class="notes-section">
+    <label for="notes">Notes for today (anything to pass along)</label>
+    <textarea id="notes" placeholder="e.g., Phoebe seemed extra hungry, Wyatt had a great walk..."></textarea>
+  </div>
+
+  <div class="action-row">
+    <button class="share-btn" id="shareBtn">Text Matt today's progress</button>
+    <button class="reset-btn" id="resetBtn">Reset this day</button>
+  </div>
+
+  <footer class="footer">
+    Made with care <span class="paw">·</span> Tap any task to check it off
+  </footer>
+
+</div>
+
+<script>
+  // ============ SCHEDULE DEFINITION ============
+  const schedule = [
+    {
+      block: 'Morning',
+      icon: 'i.',
+      hint: 'Start of day',
+      tasks: [
+        { text: 'Sweep the whole yard for rabbits', who: 'both' },
+        { text: 'Let Phoebe out', who: 'phoebe' },
+        { text: 'Take Wyatt out (on leash)', who: 'wyatt' },
+        { text: 'Feed both dogs', who: 'both' },
+        { text: 'Watch Wyatt until finished, then return to office', who: 'wyatt' },
+        { text: 'Brush both dogs\' teeth thoroughly', who: 'both' },
+        { text: 'Give Phoebe Cyclosporine', who: 'phoebe', med: true },
+        { text: 'Give Wyatt Trazodone', who: 'wyatt', med: true }
+      ]
+    },
+    {
+      block: 'Afternoon',
+      icon: 'ii.',
+      hint: 'Midday',
+      tasks: [
+        { text: 'Before Mia arrives, put Wyatt in kennel in the office', who: 'wyatt' },
+        { text: 'Give Phoebe one tablet of Denamarin', who: 'phoebe', med: true },
+        { text: 'Give Wyatt one tablet of Denamarin', who: 'wyatt', med: true }
+      ]
+    },
+    {
+      block: 'Dinner',
+      icon: 'iii.',
+      hint: 'Evening meal',
+      tasks: [
+        { text: 'Sweep the whole yard for rabbits', who: 'both' },
+        { text: 'Let Phoebe out', who: 'phoebe' },
+        { text: 'Take Wyatt out (on leash)', who: 'wyatt' },
+        { text: 'Feed both dogs', who: 'both' },
+        { text: 'Watch Wyatt until finished, then return to office', who: 'wyatt' },
+        { text: 'Brush both dogs\' teeth thoroughly', who: 'both' },
+        { text: 'Give Phoebe half tablet of Ursodiol', who: 'phoebe', med: true }
+      ]
+    },
+    {
+      block: 'Evening',
+      icon: 'iv.',
+      hint: 'Before bed',
+      tasks: [
+        { text: 'Give Phoebe Cyclosporine', who: 'phoebe', med: true },
+        { text: 'Sweep the whole yard for rabbits', who: 'both' },
+        { text: 'Let Phoebe out', who: 'phoebe' },
+        { text: 'Take Wyatt out (on leash)', who: 'wyatt' }
+      ]
+    }
+  ];
+
+  const TRIP_START = '2026-05-27'; // Wednesday May 27
+  const TOTAL_DAYS = 6; // through Monday June 1
+  const STORAGE_KEY = 'dogScheduleData_v2';
+
+  // ============ STATE ============
+  let currentDay = 1;
+  let state = loadState();
+
+  function loadState() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) return JSON.parse(raw);
+    } catch (e) {}
+    return { days: {}, notes: {}, startDate: null };
+  }
+
+  function saveState() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+  }
+
+  // Initialize with fixed trip start date
+  state.startDate = TRIP_START;
+  saveState();
+
+  // Try to set current day based on real date
+  function setCurrentDayByDate() {
+    const start = new Date(state.startDate);
+    const today = new Date();
+    start.setHours(0,0,0,0);
+    today.setHours(0,0,0,0);
+    const diff = Math.floor((today - start) / (1000 * 60 * 60 * 24));
+    if (diff >= 0 && diff < TOTAL_DAYS) {
+      currentDay = diff + 1;
+    }
+  }
+  setCurrentDayByDate();
+
+  // ============ RENDER ============
+  function getDayKey(day) { return `day${day}`; }
+
+  function getDayState(day) {
+    return state.days[getDayKey(day)] || {};
+  }
+
+  function setTaskState(day, taskId, done) {
+    const key = getDayKey(day);
+    if (!state.days[key]) state.days[key] = {};
+    state.days[key][taskId] = done;
+    saveState();
+  }
+
+  function getDateForDay(day) {
+    const start = new Date(state.startDate);
+    start.setDate(start.getDate() + (day - 1));
+    return start;
+  }
+
+  function formatDate(d) {
+    const opts = { weekday: 'long', month: 'short', day: 'numeric' };
+    return d.toLocaleDateString('en-US', opts);
+  }
+
+  function countProgress(day) {
+    let total = 0, done = 0;
+    const dayState = getDayState(day);
+    schedule.forEach((block, bi) => {
+      block.tasks.forEach((task, ti) => {
+        total++;
+        const id = `b${bi}t${ti}`;
+        if (dayState[id]) done++;
+      });
+    });
+    return { total, done };
+  }
+
+  function render() {
+    // Day label and date
+    document.getElementById('dayLabel').textContent = `Day ${currentDay}`;
+    const date = getDateForDay(currentDay);
+    document.getElementById('dayDate').textContent = formatDate(date);
+
+    // Progress pill
+    const { total, done } = countProgress(currentDay);
+    const pill = document.getElementById('progressPill');
+    pill.textContent = `${done} of ${total} complete`;
+    pill.className = 'progress-pill ' + (done === 0 ? 'none' : done < total ? 'partial' : '');
+
+    // Nav buttons
+    document.getElementById('prevDay').disabled = currentDay <= 1;
+    document.getElementById('nextDay').disabled = currentDay >= TOTAL_DAYS;
+
+    // Schedule blocks
+    const container = document.getElementById('scheduleContainer');
+    container.innerHTML = '';
+    const dayState = getDayState(currentDay);
+
+    schedule.forEach((block, bi) => {
+      const blockEl = document.createElement('div');
+      blockEl.className = 'time-block';
+      blockEl.innerHTML = `
+        <div class="time-block-header">
+          <span class="icon">${block.icon}</span>
+          <h2>${block.block}</h2>
+          <span class="time-hint">${block.hint}</span>
+        </div>
+        <div class="task-list"></div>
+      `;
+      const list = blockEl.querySelector('.task-list');
+
+      block.tasks.forEach((task, ti) => {
+        const id = `b${bi}t${ti}`;
+        const isDone = !!dayState[id];
+        const taskEl = document.createElement('div');
+        taskEl.className = 'task' + (isDone ? ' done' : '');
+        taskEl.innerHTML = `
+          <div class="checkbox"></div>
+          <div class="task-content">
+            <div class="task-text">${task.text}</div>
+            <div class="task-meta">
+              <span class="tag ${task.who}">${task.who === 'both' ? 'Both' : task.who.charAt(0).toUpperCase() + task.who.slice(1)}</span>
+              ${task.med ? '<span class="tag med">Medication</span>' : ''}
+            </div>
+          </div>
+        `;
+        taskEl.addEventListener('click', () => {
+          const newDone = !taskEl.classList.contains('done');
+          taskEl.classList.toggle('done', newDone);
+          setTaskState(currentDay, id, newDone);
+          // Update progress pill
+          const p = countProgress(currentDay);
+          pill.textContent = `${p.done} of ${p.total} complete`;
+          pill.className = 'progress-pill ' + (p.done === 0 ? 'none' : p.done < p.total ? 'partial' : '');
+        });
+        list.appendChild(taskEl);
+      });
+      container.appendChild(blockEl);
+    });
+
+    // Notes
+    const notesEl = document.getElementById('notes');
+    notesEl.value = state.notes[getDayKey(currentDay)] || '';
+  }
+
+  // ============ EVENTS ============
+  document.getElementById('prevDay').addEventListener('click', () => {
+    if (currentDay > 1) { currentDay--; render(); window.scrollTo(0,0); }
+  });
+  document.getElementById('nextDay').addEventListener('click', () => {
+    if (currentDay < TOTAL_DAYS) { currentDay++; render(); window.scrollTo(0,0); }
+  });
+  document.getElementById('notes').addEventListener('input', (e) => {
+    state.notes[getDayKey(currentDay)] = e.target.value;
+    saveState();
+  });
+  document.getElementById('resetBtn').addEventListener('click', () => {
+    if (confirm(`Reset all tasks for Day ${currentDay}?`)) {
+      state.days[getDayKey(currentDay)] = {};
+      saveState();
+      render();
+    }
+  });
+
+  // Share progress via SMS
+  // Replace YOUR_NUMBER below with Matt's number (format: +15551234567 or 5551234567)
+  const MATT_PHONE = '5154470277';
+
+  document.getElementById('shareBtn').addEventListener('click', () => {
+    const date = getDateForDay(currentDay);
+    const dateStr = date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+    const dayState = getDayState(currentDay);
+    const { total, done } = countProgress(currentDay);
+
+    let missed = [];
+    schedule.forEach((block, bi) => {
+      block.tasks.forEach((task, ti) => {
+        const id = `b${bi}t${ti}`;
+        if (!dayState[id]) {
+          missed.push(`• ${block.block}: ${task.text}`);
+        }
+      });
+    });
+
+    const notes = (state.notes[getDayKey(currentDay)] || '').trim();
+
+    let msg = `Phoebe & Wyatt — Day ${currentDay} (${dateStr})\n${done}/${total} done`;
+    if (missed.length > 0 && missed.length <= 8) {
+      msg += `\n\nNot done:\n${missed.join('\n')}`;
+    } else if (missed.length > 8) {
+      msg += `\n\n${missed.length} tasks not yet done`;
+    }
+    if (notes) {
+      msg += `\n\nNotes: ${notes}`;
+    }
+
+    const encoded = encodeURIComponent(msg);
+    const smsLink = MATT_PHONE ? `sms:${MATT_PHONE}?body=${encoded}` : `sms:?body=${encoded}`;
+    window.location.href = smsLink;
+  });
+
+  render();
+</script>
+</body>
+</html>
